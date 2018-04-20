@@ -8,7 +8,8 @@ class Simulation(object):
 
 class NemoSim(Simulation):
 
-	def __init__(self, path, grid_path, decode_times=True,
+	def __init__(self, path, grid_path="./", grids=['T', 'U', 'V', 'W'],
+                 decode_times=True,
 	             chunks=None, autoclose=False):
 		"""
 		Build and read a Nemo simulation under `xarray.DataSet` objects. The files
@@ -16,9 +17,14 @@ class NemoSim(Simulation):
 
 		Parameters
 		----------
-		path: str
-			Root path of the simulation
-		decode_times: bool, optional
+		path : str
+			Path of the simulation where to find the different files, it may 
+            usefully defined using unix wildcards
+        grid_path : str, optional
+            The path of the grid files associated with the simulation
+        grids : list, optional 
+            The list of grids to open containing {'U', 'V', 'T', 'F'}
+		decode_times : bool, optional
 			See xarray.Dataset
         chunks : int, tuple or dict, optional
             Chunk sizes along each dimension, e.g., ``5``, ``(5, 5)`` or
@@ -34,16 +40,16 @@ class NemoSim(Simulation):
                     .set_coords(['nav_lon', 'nav_lat'])
 			     )
 			return ds
-		if glob.glob(path + "/*/*/*gridT.nc"):
-			self.gridT = open_files(path + "/*/*/*gridT.nc")
-		if glob.glob(path + "/*/*/*gridU.nc"):
-			self.gridU = open_files(path + "/*/*/*gridU.nc")
-		if glob.glob(path + "/*/*/*gridV.nc"):
-			self.gridV = open_files(path + "/*/*/*gridV.nc")
-		if glob.glob(path + "/*/*/*gridW.nc"):
-			self.gridW = open_files(path + "/*/*/*gridW.nc")
-		if glob.glob(path + "/*/*/*flxT.nc"):
-			self.flxT = open_files(path + "/*/*/*flxT.nc")
+		if glob.glob(path + "/*gridT.nc") and ('T' in grids):
+			self.gridT = open_files(path + "/*gridT.nc")
+		if glob.glob(path + "/*gridU.nc") and ('U' in grids):
+			self.gridU = open_files(path + "/*gridU.nc")
+		if glob.glob(path + "/*gridV.nc") and ('V' in grids):
+			self.gridV = open_files(path + "/*gridV.nc")
+		if glob.glob(path + "/*gridW.nc") and ('W' in grids):
+			self.gridW = open_files(path + "/*gridW.nc")
+		if glob.glob(path + "/*flxT.nc") and ('T' in grids):
+			self.flxT = open_files(path + "/*flxT.nc")
 
 	def open_grid_files(self, grid_path):
 		if glob.glob(grid_path + "/*coordinates.nc"):
