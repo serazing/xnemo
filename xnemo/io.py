@@ -29,10 +29,9 @@ class NemoSim(Simulation):
 			ds = (xr.open_mfdataset(filenames,
 			                        decode_times=decode_times,
 			                        autoclose=autoclose,
-			                        drop_variables=('nav_lon', 'nav_lat'),
-			                        chunks=chunks).
-			      assign_coords(nav_lon=self.mask.nav_lon,
-			                    nav_lat=self.mask.nav_lat)
+			                        data_vars='minimal',
+			                        chunks=chunks)
+                    .set_coords(['nav_lon', 'nav_lat'])
 			     )
 			return ds
 		if glob.glob(path + "/*/*/*gridT.nc"):
