@@ -18,7 +18,7 @@ class NemoSim(Simulation):
 		Parameters
 		----------
 		path : str
-			Path of the simulation where to find the different files, it may 
+			Path of the simulation where to find the different files, it may be
             usefully defined using unix wildcards
         grid_path : str, optional
             The path of the grid files associated with the simulation
@@ -35,10 +35,10 @@ class NemoSim(Simulation):
 			ds = (xr.open_mfdataset(filenames,
 			                        decode_times=decode_times,
 			                        autoclose=autoclose,
-			                        data_vars='minimal',
-			                        chunks=chunks)
+			                        data_vars='minimal')
                     .set_coords(['nav_lon', 'nav_lat'])
 			     )
+			ds = ds.chunk(chunks=chunks)
 			return ds
 		if glob.glob(path + "/*gridT.nc") and ('T' in grids):
 			self.gridT = open_files(path + "/*gridT.nc")
